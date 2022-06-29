@@ -1,6 +1,6 @@
 import { Repo } from '../../models/Repo';
 import { Table } from 'reactstrap';
-import { TableRow } from './TableRow/TableRow';
+import { ListRepos } from './ListRepos/ListRepos';
 
 import './Repositories.css';
 import { useEffect, useState } from 'react';
@@ -62,7 +62,7 @@ export function Repositories(props: RepositoriesProps) {
           </tr>
         </thead>
         <tbody>
-          <TableRow repos={repos} />
+          <ListRepos repos={repos} />
         </tbody>
       </Table>
     </>

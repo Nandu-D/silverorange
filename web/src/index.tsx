@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { App } from './components/App/App';
+import { Details } from './components/Repositories/Details/Details';
 import { reportWebVitals } from './reportWebVitals';
 
 import 'bootstrap/dist/css/bootstrap.css';
@@ -12,6 +13,7 @@ ReactDOM.render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />} />
+        <Route path="/details" element={<Details />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,
