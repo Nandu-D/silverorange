@@ -11,6 +11,11 @@ interface RepositoriesProps {
 export function Repositories(props: RepositoriesProps) {
   const { repos } = props;
 
+  //Sorting repos reverse chronologically by its creation date
+  repos.sort((x, y) => {
+    return new Date(y.created_at).getTime() - new Date(x.created_at).getTime();
+  });
+
   return (
     <div>
       <Table striped={true}>
