@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import './App.css';
 import { Repo } from '../../models/Repo';
-import { RepositoriesTable } from '../RepositoriesTable/RepositoriesTable';
+import { Repositories } from '../Repositories/Repositories';
 
 export function App() {
   const [error, setError] = useState(null);
@@ -29,6 +29,6 @@ export function App() {
   } else if (!isLoaded) {
     return <div>Loading...</div>;
   } else {
-    return <RepositoriesTable repos={repos} />;
+    return <Repositories repos={repos} />;
   }
 }
