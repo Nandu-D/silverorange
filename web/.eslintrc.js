@@ -82,7 +82,7 @@ const newConfig = Object.assign({}, config, {
             },
             {
               selector: ['property', 'variable'],
-              format: ['camelCase', 'UPPER_CASE'],
+              format: ['camelCase', 'UPPER_CASE', 'snake_case'], //Added snake_case to disable lint error for property names coming from api
             },
             {
               selector: ['function', 'parameter'],
