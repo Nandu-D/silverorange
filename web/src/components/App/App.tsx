@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import './App.css';
 import { Repo } from '../../models/Repo';
+import { RepositoriesTable } from '../RepositoriesTable/RepositoriesTable';
 
 export function App() {
   const [error, setError] = useState(null);
@@ -28,6 +29,6 @@ export function App() {
   } else if (!isLoaded) {
     return <div>Loading...</div>;
   } else {
-    return <div>{repos.length}</div>;
+    return <RepositoriesTable repos={repos} />;
   }
 }
