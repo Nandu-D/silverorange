@@ -10,21 +10,27 @@ const REPOS_JSON_FILE_PATH = './data/repos.json';
 
 repos.get('/', async (_: Request, res: Response) => {
   res.header('Cache-Control', 'no-store');
+  res.header('Content-Type', 'application/json');
 
   res.status(200);
 
   // TODO: See README.md Task (A). Return repo data here. You’ve got this!
 
   let reposFromGitHub: Repo[] = [];
-  let reposFromJsonFile: Repo[] = [];
   await getReposFromGitHub(REPOS_GITHUB_URL).then((data) => {
     reposFromGitHub = data;
   });
+  let reposFromJsonFile: Repo[] = [];
   await getReposFromJsonFile(REPOS_JSON_FILE_PATH).then((data) => {
     reposFromJsonFile = data;
   });
 
-  res.json([...reposFromGitHub, ...reposFromJsonFile]);
+  const reposFromGitHubFiltered = reposFromGitHub.filter(filterRepository);
+  const reposFromJsonFileFiltered = reposFromJsonFile.filter(filterRepository);
+
+  const repos = [...reposFromGitHubFiltered, ...reposFromJsonFileFiltered];
+
+  res.json(repos);
 });
 
 const getReposFromGitHub = async (url: string) => {
@@ -44,4 +50,8 @@ const getReposFromJsonFile = async (filePath: string) => {
   } catch (error) {
     return [];
   }
+};
+
+const filterRepository = (repository: Repo) => {
+  return !repository.fork;
 };
