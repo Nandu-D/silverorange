@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { Repo } from '../models/Repo';
-const fetch = require('node-fetch');
-const fs = require('fs');
+import fetch from 'node-fetch';
+import fs = require('fs/promises');
 
 export const repos = Router();
 
@@ -28,16 +28,19 @@ repos.get('/', async (_: Request, res: Response) => {
   const reposFromGitHubFiltered = reposFromGitHub.filter(filterRepository);
   const reposFromJsonFileFiltered = reposFromJsonFile.filter(filterRepository);
 
-  const repos = [...reposFromGitHubFiltered, ...reposFromJsonFileFiltered];
+  const repositories = [
+    ...reposFromGitHubFiltered,
+    ...reposFromJsonFileFiltered,
+  ];
 
-  res.json(repos);
+  res.json(repositories);
 });
 
 const getReposFromGitHub = async (url: string) => {
   try {
     const response = await fetch(url);
-    const repos = await response.json();
-    return repos;
+    const body = await response.json();
+    return body;
   } catch (error) {
     return [];
   }
@@ -45,8 +48,8 @@ const getReposFromGitHub = async (url: string) => {
 
 const getReposFromJsonFile = async (filePath: string) => {
   try {
-    const repos = await fs.promises.readFile(filePath);
-    return JSON.parse(repos);
+    const data = await fs.readFile(filePath);
+    return JSON.parse(data.toString());
   } catch (error) {
     return [];
   }
