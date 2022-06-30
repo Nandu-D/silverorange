@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Button } from 'reactstrap';
 import { Repo } from '../../models/Repo';
 import { Repositories } from '../Repositories/Repositories';
 import './App.css';
@@ -24,7 +25,18 @@ export function App() {
   }, []);
 
   if (error) {
-    return <div>Couldn't load repositories. Please try again.</div>;
+    return (
+      <div>
+        Couldn't load repositories. Please try again.
+        <Button
+          color="primary"
+          className="tryAgain"
+          onClick={() => window.location.reload()}
+        >
+          Try again
+        </Button>
+      </div>
+    );
   } else if (!isLoaded) {
     return <div>Loading...</div>;
   } else {
