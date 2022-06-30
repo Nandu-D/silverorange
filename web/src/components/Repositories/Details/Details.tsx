@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Button } from 'reactstrap';
+import { Button, Card, CardTitle } from 'reactstrap';
 import { Commit } from '../../../models/Commit';
 import { Repo } from '../../../models/Repo';
-
 import './Details.css';
 
 interface LocationState {
@@ -15,6 +15,7 @@ export function Details() {
   const [commitDate, setCommitDate] = useState<string>();
   const [author, setAuthor] = useState<string>();
   const [message, setMessage] = useState<string>();
+  const [readme, setReadme] = useState<string>();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -23,26 +24,40 @@ export function Details() {
   const { repo } = state;
 
   useEffect(() => {
-    fetch(repo.url + '/commits')
+    const gitHubCommitsUrl = repo.url + '/commits';
+    fetch(gitHubCommitsUrl)
       .then((res) => res.json())
-      .then((data) => {
-        const sortedData = (data as Commit[]).sort((x, y) => {
-          const xDate = x.commit.author.date;
-          const yDate = y.commit.author.date;
-          const xTimeStampToEpochTime = new Date(xDate).getTime();
-          const yTimeStampToEpochTime = new Date(yDate).getTime();
+      .then((data) => extractCommitNameAuthorDate(data));
 
-          return yTimeStampToEpochTime - xTimeStampToEpochTime;
-        });
-        if (sortedData.length) {
-          const latestCommit = sortedData[0];
-          setIsLatestCommitAvailable(true);
-          setCommitDate(new Date(latestCommit.commit.author.date).toString());
-          setAuthor(latestCommit.commit.author.name);
-          setMessage(latestCommit.commit.message);
+    const gitHubReadmeFileUrl = `https://raw.githubusercontent.com/${repo.full_name}/master/README.md`;
+    fetch(gitHubReadmeFileUrl)
+      .then((res) => {
+        if (res.ok) {
+          return res.text();
+        } else {
+          return '';
         }
-      });
+      })
+      .then((result) => setReadme(result));
   }, [repo]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const extractCommitNameAuthorDate = (data: Commit[]) => {
+    const sortedData = data.sort((x, y) => {
+      const xDate = x.commit.author.date;
+      const yDate = y.commit.author.date;
+      const xTimeStampToEpochTime = new Date(xDate).getTime();
+      const yTimeStampToEpochTime = new Date(yDate).getTime();
+
+      return yTimeStampToEpochTime - xTimeStampToEpochTime;
+    });
+    if (sortedData.length) {
+      const latestCommit = sortedData[0];
+      setIsLatestCommitAvailable(true);
+      setCommitDate(new Date(latestCommit.commit.author.date).toString());
+      setAuthor(latestCommit.commit.author.name);
+      setMessage(latestCommit.commit.message);
+    }
+  };
 
   return (
     <>
@@ -52,9 +67,10 @@ export function Details() {
       {repo ? (
         <div className="commitDetails">
           {isLatestCommitAvailable ? (
-            <>
+            <Card className="detailsCard">
+              <CardTitle tag="h4">Latest commit details</CardTitle>
               <div>
-                <span>Most recent commit date: </span>
+                <span>Commit date: </span>
                 {commitDate}
               </div>
               <div>
@@ -65,7 +81,7 @@ export function Details() {
                 <span>Message: </span>
                 {message}
               </div>
-            </>
+            </Card>
           ) : (
             <div>Couldn't fetch commits data</div>
           )}
@@ -74,6 +90,11 @@ export function Details() {
         <div className="error">
           Please try going back and reselecting a repository.
         </div>
+      )}
+      {readme ? (
+        <ReactMarkdown className="markdown">{readme}</ReactMarkdown>
+      ) : (
+        <></>
       )}
     </>
   );

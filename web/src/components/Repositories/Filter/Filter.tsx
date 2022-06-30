@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Button } from 'reactstrap';
-
 import './Filter.css';
 
 interface FilterProps {
@@ -10,15 +9,15 @@ interface FilterProps {
 
 export function Filter(props: FilterProps) {
   const { languages, onClick } = props;
-  const [isSelected, setIsSelected] = useState(false);
+  const [isSelected, setIsSelected] = useState<string | null>();
 
   const onLanguageSelected = (language: string | undefined) => {
-    setIsSelected(true);
+    setIsSelected(language);
     onClick(language);
   };
 
   const onClearClicked = () => {
-    setIsSelected(false);
+    setIsSelected(null);
     onClick(undefined);
   };
 
@@ -30,6 +29,7 @@ export function Filter(props: FilterProps) {
           color="primary"
           key={language}
           className="languageButton"
+          disabled={isSelected === language}
           onClick={() => onLanguageSelected(language)}
         >
           {language}

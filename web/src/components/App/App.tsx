@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
-
-import './App.css';
 import { Repo } from '../../models/Repo';
 import { Repositories } from '../Repositories/Repositories';
+import './App.css';
 
 export function App() {
   const [error, setError] = useState(null);

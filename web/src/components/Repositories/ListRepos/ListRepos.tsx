@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Repo } from '../../../models/Repo';
+import './ListRepos.css';
 
 interface ListReposProps {
   repos: Repo[];

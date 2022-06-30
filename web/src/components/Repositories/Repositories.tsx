@@ -1,10 +1,9 @@
+import { useEffect, useState } from 'react';
 import { Repo } from '../../models/Repo';
 import { Table } from 'reactstrap';
 import { ListRepos } from './ListRepos/ListRepos';
-
-import './Repositories.css';
-import { useEffect, useState } from 'react';
 import { Filter } from './Filter/Filter';
+import './Repositories.css';
 
 interface RepositoriesProps {
   repos: Repo[];
@@ -37,7 +36,7 @@ export function Repositories(props: RepositoriesProps) {
         new Date(y.created_at).getTime() - new Date(x.created_at).getTime()
       );
     });
-    setRepos([...sortedArray]);
+    setRepos(sortedArray);
   };
 
   return (
